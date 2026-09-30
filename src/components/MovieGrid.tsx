@@ -1,5 +1,6 @@
-import { Box, Card, Skeleton } from '@mui/material';
+import { Box } from '@mui/material';
 import MovieCard from './MovieCard';
+import MovieCardSkeleton from './MovieCardSkeleton';
 import type { MovieSummary } from '../types/tmdb';
 
 interface MovieGridProps {
@@ -32,19 +33,6 @@ function MovieGrid({ movies, loadingCount = 0 }: MovieGridProps) {
         <MovieCardSkeleton key={`skeleton-${i}`} />
       ))}
     </Box>
-  );
-}
-
-/** Grey placeholder with the same shape as a MovieCard. */
-function MovieCardSkeleton() {
-  return (
-    <Card>
-      <Skeleton variant="rectangular" sx={{ aspectRatio: '2 / 3', height: 'auto' }} />
-      <Box sx={{ p: 1.5 }}>
-        <Skeleton width="80%" />
-        <Skeleton width="30%" />
-      </Box>
-    </Card>
   );
 }
 
