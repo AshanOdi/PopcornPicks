@@ -56,7 +56,8 @@ function SearchBar({ initialValue = '', onSearch }: SearchBarProps) {
             bgcolor: 'rgba(var(--mui-palette-background-paperChannel) / 0.8)',
             backdropFilter: 'blur(16px)',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)',
-            // Rounded ends need more inner space than square corners
+            // Rounded ends need more inner space than square corners.
+            // Right: 12px + the clear button's own 8px padding ≈ the 20px on the left, so both icons sit evenly.
             pl: 2.5,
             pr: 1.5,
           },
@@ -72,7 +73,7 @@ function SearchBar({ initialValue = '', onSearch }: SearchBarProps) {
             ),
             endAdornment: value && (
               <InputAdornment position="end">
-                <IconButton onClick={handleClear} edge="end" aria-label="clear search">
+                <IconButton onClick={handleClear} aria-label="clear search">
                   <ClearIcon />
                 </IconButton>
               </InputAdornment>
