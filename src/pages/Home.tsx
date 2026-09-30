@@ -18,6 +18,13 @@ function Home() {
   const { lastSearch, setLastSearch } = useMovies();
   const searching = Boolean(lastSearch);
 
+  /** New search (or cleared search): save it and jump back to the top, so results start from the beginning. */
+  function handleSearch(query: string) {
+    if (query === lastSearch) return;
+    setLastSearch(query);
+    window.scrollTo({ top: 0 });
+  }
+
   return (
     <>
       {/* `searching ? null : ...` keeps the SearchBar at the same place in the React tree,
@@ -34,7 +41,7 @@ function Home() {
           mb: { xs: 3, sm: 4 },
         }}
       >
-        <SearchBar initialValue={lastSearch} onSearch={setLastSearch} />
+        <SearchBar initialValue={lastSearch} onSearch={handleSearch} />
       </Box>
 
       {/* key={lastSearch} gives each new search a fresh SearchResults (page 1, empty list) */}
