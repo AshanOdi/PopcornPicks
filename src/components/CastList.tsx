@@ -80,8 +80,11 @@ function CastList({ cast }: { cast: CastMember[] }) {
             // Hide the scrollbar (still scrollable by swipe, trackpad and arrows)
             scrollbarWidth: 'none',
             '&::-webkit-scrollbar': { display: 'none' },
-            // Fade the left/right edges so people glide in and out
-            maskImage: animate ? 'linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent)' : undefined,
+            // The row is always moving, so someone is always half-way off an edge.
+            // A wide, fixed-size fade (same on every screen) makes them dissolve in/out instead of looking cut off.
+            maskImage: animate
+              ? 'linear-gradient(90deg, transparent, #000 72px, #000 calc(100% - 72px), transparent)'
+              : undefined,
           }}
         >
           <Box component="ul" sx={{ display: 'flex', width: 'max-content', listStyle: 'none', p: 0, m: 0 }}>
