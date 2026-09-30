@@ -89,12 +89,25 @@ const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: (theme) => ({
-        body: {
-          // Subtle gold "spotlight" glow at the top of the page in dark mode
+        // Ambient "cinema light" glows behind the whole app: gold top-left, red right, violet bottom.
+        // A fixed pseudo-element stays put while scrolling and never affects layout or clicks.
+        "body::before": {
+          content: '""',
+          position: "fixed",
+          inset: 0,
+          zIndex: -1,
+          pointerEvents: "none",
+          backgroundImage: [
+            "radial-gradient(900px 600px at 0% 0%, rgba(255, 178, 36, 0.08), transparent 60%)",
+            "radial-gradient(700px 500px at 100% 35%, rgba(225, 29, 72, 0.05), transparent 60%)",
+            "radial-gradient(900px 600px at 40% 110%, rgba(124, 58, 237, 0.05), transparent 60%)",
+          ].join(", "),
           ...theme.applyStyles("dark", {
-            backgroundImage:
-              "radial-gradient(1000px 500px at 50% -150px, rgba(255, 178, 36, 0.12), transparent)",
-            backgroundRepeat: "no-repeat",
+            backgroundImage: [
+              "radial-gradient(900px 600px at 0% 0%, rgba(255, 178, 36, 0.14), transparent 60%)",
+              "radial-gradient(700px 500px at 100% 35%, rgba(255, 77, 109, 0.09), transparent 60%)",
+              "radial-gradient(900px 600px at 40% 110%, rgba(124, 58, 237, 0.10), transparent 60%)",
+            ].join(", "),
           }),
         },
       }),
