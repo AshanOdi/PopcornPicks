@@ -88,8 +88,12 @@ function Login() {
         )}
 
         <Box component="form" onSubmit={handleSubmit} noValidate>
+          {/* Labels stay above the fields (shrink: true). On mobile, browser autofill can otherwise
+              desync MUI's floating label from the gap ("notch") it cuts in the border. */}
           <TextField
             label="Username"
+            placeholder="Your TMDb username"
+            slotProps={{ inputLabel: { shrink: true } }}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             error={usernameError}
@@ -101,6 +105,7 @@ function Login() {
           />
           <TextField
             label="Password"
+            placeholder="Your password"
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -110,6 +115,7 @@ function Login() {
             fullWidth
             margin="dense"
             slotProps={{
+              inputLabel: { shrink: true },
               input: {
                 endAdornment: (
                   <InputAdornment position="end">
