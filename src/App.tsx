@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthProvider';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import MovieDetails from './pages/MovieDetails';
@@ -8,20 +9,22 @@ import NotFound from './pages/NotFound';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Login has no navbar */}
-        <Route path="/login" element={<Login />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Login has no navbar */}
+          <Route path="/login" element={<Login />} />
 
-        {/* All other pages share the Layout (navbar + container) */}
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/movie/:id" element={<MovieDetails />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          {/* All other pages share the Layout (navbar + container) */}
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
