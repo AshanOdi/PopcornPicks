@@ -53,6 +53,16 @@ export async function getTrendingMovies(page = 1) {
   return data;
 }
 
+export async function getTopRatedMovies(page = 1) {
+  const { data } = await tmdb.get<PaginatedResponse<Movie>>('/movie/top_rated', { params: { page } });
+  return data;
+}
+
+export async function getNowPlayingMovies(page = 1) {
+  const { data } = await tmdb.get<PaginatedResponse<Movie>>('/movie/now_playing', { params: { page } });
+  return data;
+}
+
 export async function searchMovies(query: string, page = 1) {
   const { data } = await tmdb.get<PaginatedResponse<Movie>>('/search/movie', {
     params: { query, page, include_adult: false },
