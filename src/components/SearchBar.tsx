@@ -56,8 +56,11 @@ function SearchBar({ initialValue = '', onSearch }: SearchBarProps) {
             bgcolor: 'rgba(var(--mui-palette-background-paperChannel) / 0.8)',
             backdropFilter: 'blur(16px)',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)',
-            pl: 1,
+            // Rounded ends need more inner space than square corners
+            pl: 2.5,
+            pr: 1.5,
           },
+          '& .MuiInputAdornment-positionStart': { mr: 1.5, color: 'text.secondary' },
         }}
         slotProps={{
           htmlInput: { 'aria-label': 'search movies' },
