@@ -52,6 +52,7 @@ export interface MovieDetails extends Omit<Movie, 'genre_ids'> {
   genres: Genre[];
   runtime: number | null;
   tagline: string;
+  original_language: string; // ISO 639-1 code, e.g. "en"
   credits: { cast: CastMember[] };
   videos: { results: Video[] };
 }

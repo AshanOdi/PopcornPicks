@@ -11,13 +11,7 @@ import FavoriteButton from '../components/FavoriteButton';
 import ErrorAlert from '../components/ErrorAlert';
 import { getErrorMessage, getMovieDetails, imageUrl } from '../api/tmdb';
 import type { MovieDetails as MovieDetailsType } from '../types/tmdb';
-
-/** Formats minutes as "2h 15m". */
-function formatRuntime(minutes: number) {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return h ? `${h}h ${m}m` : `${m}m`;
-}
+import { formatRuntime } from '../utils/format';
 
 /** Route wrapper: key={id} gives each movie a fresh component, so state resets when the id changes. */
 function MovieDetails() {
