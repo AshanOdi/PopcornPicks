@@ -1,12 +1,22 @@
-import { AppBar, Box, Button, Container, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Badge, Box, Button, Container, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import { NavLink, Link as RouterLink } from 'react-router-dom';
 import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ThemeToggle from './ThemeToggle';
 import UserMenu from './UserMenu';
+import { useMovies } from '../hooks/useMovies';
 
 /** Top navigation bar shown on every page. */
 function Navbar() {
+  const { favorites } = useMovies();
+
+  // Heart icon with the number of saved movies
+  const favoritesIcon = (
+    <Badge badgeContent={favorites.length} color="primary" max={99}>
+      <FavoriteIcon />
+    </Badge>
+  );
+
   return (
     <AppBar position="sticky" color="default" elevation={1}>
       <Container maxWidth="lg">
@@ -27,7 +37,7 @@ function Navbar() {
           <Button
             component={NavLink}
             to="/favorites"
-            startIcon={<FavoriteIcon />}
+            startIcon={favoritesIcon}
             color="inherit"
             sx={{ display: { xs: 'none', sm: 'inline-flex' }, '&.active': { color: 'primary.main' } }}
           >
@@ -41,7 +51,7 @@ function Navbar() {
               aria-label="favorites"
               sx={{ display: { xs: 'inline-flex', sm: 'none' }, '&.active': { color: 'primary.main' } }}
             >
-              <FavoriteIcon />
+              {favoritesIcon}
             </IconButton>
           </Tooltip>
 
