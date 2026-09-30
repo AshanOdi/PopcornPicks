@@ -10,8 +10,9 @@ interface MovieGridProps {
 }
 
 /**
- * Responsive poster grid (mobile-first):
- * 2 columns on phones, then as many ~170px columns as fit on larger screens.
+ * Responsive poster grid (mobile-first): 2 / 4 / 5 columns.
+ * TMDb always returns 20 movies per page, and 20 divides evenly by 2, 4 and 5,
+ * so every loaded page fills complete rows (no half-empty last row).
  */
 function MovieGrid({ movies, loadingCount = 0 }: MovieGridProps) {
   return (
@@ -21,7 +22,8 @@ function MovieGrid({ movies, loadingCount = 0 }: MovieGridProps) {
         gap: { xs: 1.5, sm: 2 },
         gridTemplateColumns: {
           xs: 'repeat(2, 1fr)',
-          sm: 'repeat(auto-fill, minmax(170px, 1fr))',
+          sm: 'repeat(4, 1fr)',
+          md: 'repeat(5, 1fr)',
         },
       }}
     >

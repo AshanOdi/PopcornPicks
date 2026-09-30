@@ -5,6 +5,7 @@ import MovieGrid from './MovieGrid';
 import ErrorAlert from './ErrorAlert';
 import LoadMoreButton from './LoadMoreButton';
 import { usePaginatedMovies } from '../hooks/usePaginatedMovies';
+import { PAGE_SIZE } from '../api/tmdb';
 import type { Movie, PaginatedResponse } from '../types/tmdb';
 
 interface PaginatedMovieGridProps {
@@ -41,7 +42,7 @@ function PaginatedMovieGrid({ title, icon, fetchPage, emptyMessage = 'No movies 
           <Typography>{emptyMessage}</Typography>
         </Box>
       ) : (
-        <MovieGrid movies={movies} loadingCount={loading && page === 1 ? 12 : 0} />
+        <MovieGrid movies={movies} loadingCount={loading && page === 1 ? PAGE_SIZE : 0} />
       )}
 
       {error ? (

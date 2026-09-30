@@ -10,6 +10,9 @@ import type {
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
 
+/** TMDb always returns 20 movies per page (not configurable). Also used as the skeleton count. */
+export const PAGE_SIZE = 20;
+
 /**
  * Shared axios instance for every TMDb request.
  * The Read Access Token is sent as a Bearer token, so no api_key query param is needed.

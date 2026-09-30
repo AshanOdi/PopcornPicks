@@ -5,7 +5,7 @@ import MovieGrid from './MovieGrid';
 import ErrorAlert from './ErrorAlert';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { usePaginatedMovies } from '../hooks/usePaginatedMovies';
-import { searchMovies } from '../api/tmdb';
+import { PAGE_SIZE, searchMovies } from '../api/tmdb';
 
 /**
  * Search results with infinite scrolling.
@@ -13,7 +13,7 @@ import { searchMovies } from '../api/tmdb';
  */
 function SearchResults({ query }: { query: string }) {
   const fetchPage = useCallback((page: number) => searchMovies(query, page), [query]);
-  const { movies, page, totalResults, loading, error, hasMore, loadMore, retry } = usePaginatedMovies(fetchPage);
+  const { movies, totalResults, loading, error, hasMore, loadMore, retry } = usePaginatedMovies(fetchPage);
 
   const sentinelRef = useInfiniteScroll(loadMore, hasMore && !loading && !error);
 
@@ -36,7 +36,7 @@ function SearchResults({ query }: { query: string }) {
           <Typography>No movies found. Try a different title.</Typography>
         </Box>
       ) : (
-        <MovieGrid movies={movies} loadingCount={loading ? (page === 1 ? 12 : 6) : 0} />
+        <MovieGrid movies={movies} loadingCount={loading ? PAGE_SIZE : 0} />
       )}
 
       {error && <ErrorAlert message={error} onRetry={retry} />}
