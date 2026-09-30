@@ -1,9 +1,9 @@
 import { Box, Card, Skeleton } from '@mui/material';
 import MovieCard from './MovieCard';
-import type { Movie } from '../types/tmdb';
+import type { MovieSummary } from '../types/tmdb';
 
 interface MovieGridProps {
-  movies: Movie[];
+  movies: MovieSummary[];
   /** Number of skeleton cards to show while loading */
   loadingCount?: number;
 }

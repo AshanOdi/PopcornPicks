@@ -7,6 +7,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MovieIcon from '@mui/icons-material/Movie';
 import CastList from '../components/CastList';
 import TrailerButton from '../components/TrailerButton';
+import FavoriteButton from '../components/FavoriteButton';
 import ErrorAlert from '../components/ErrorAlert';
 import { getErrorMessage, getMovieDetails, imageUrl } from '../api/tmdb';
 import type { MovieDetails as MovieDetailsType } from '../types/tmdb';
@@ -162,9 +163,10 @@ function MovieDetailsContent({ id }: { id: number }) {
             </Typography>
             <Typography sx={{ opacity: 0.9, lineHeight: 1.7 }}>{movie.overview || 'No overview available.'}</Typography>
 
-            <Box sx={{ mt: 3 }}>
+            <Stack direction="row" spacing={2} useFlexGap sx={{ flexWrap: 'wrap', mt: 3 }}>
               <TrailerButton videos={movie.videos.results} title={movie.title} />
-            </Box>
+              <FavoriteButton movie={movie} variant="button" />
+            </Stack>
           </Box>
         </Stack>
       </Box>

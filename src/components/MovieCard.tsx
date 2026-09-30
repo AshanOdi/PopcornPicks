@@ -2,17 +2,18 @@ import { Box, Card, CardActionArea, CardContent, Chip, Typography } from '@mui/m
 import { Link as RouterLink } from 'react-router-dom';
 import StarIcon from '@mui/icons-material/Star';
 import MovieIcon from '@mui/icons-material/Movie';
+import FavoriteButton from './FavoriteButton';
 import { imageUrl } from '../api/tmdb';
-import type { Movie } from '../types/tmdb';
+import type { MovieSummary } from '../types/tmdb';
 
 /** Poster card showing title, release year and rating. Clicking opens the details page. */
-function MovieCard({ movie }: { movie: Movie }) {
+function MovieCard({ movie }: { movie: MovieSummary }) {
   const poster = imageUrl(movie.poster_path, 'w342');
   const year = movie.release_date ? movie.release_date.slice(0, 4) : '—';
   const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
 
   return (
-    <Card sx={{ height: '100%', transition: 'transform 0.2s', '&:hover': { transform: 'translateY(-4px)' } }}>
+    <Card sx={{ position: 'relative', height: '100%', transition: 'transform 0.2s', '&:hover': { transform: 'translateY(-4px)' } }}>
       <CardActionArea component={RouterLink} to={`/movie/${movie.id}`} sx={{ height: '100%' }}>
         {/* 2:3 poster ratio keeps every card the same size */}
         <Box sx={{ position: 'relative', aspectRatio: '2 / 3', bgcolor: 'action.hover' }}>
@@ -47,6 +48,11 @@ function MovieCard({ movie }: { movie: Movie }) {
           </Typography>
         </CardContent>
       </CardActionArea>
+
+      {/* Outside CardActionArea: a button can't be nested inside a link */}
+      <Box sx={{ position: 'absolute', top: 6, right: 6 }}>
+        <FavoriteButton movie={movie} />
+      </Box>
     </Card>
   );
 }
