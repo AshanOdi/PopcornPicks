@@ -9,7 +9,7 @@ function Layout() {
     <>
       <Navbar />
       {/* Extra bottom padding on mobile so the fixed BottomNav doesn't cover content */}
-      <Container component="main" maxWidth="lg" sx={{ pt: { xs: 2, sm: 4 }, pb: { xs: 10, md: 4 } }}>
+      <Container component="main" maxWidth="lg" sx={{ pt: { xs: 2, sm: 4 }, pb: { xs: 13, md: 4 } }}>
         <Outlet />
       </Container>
       <BottomNav />

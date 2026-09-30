@@ -11,19 +11,27 @@ function BottomNav() {
   const current = navItems.some((item) => item.to === pathname) ? pathname : false;
 
   return (
+    // Floating glass pill, matching the scrolled top Navbar
     <Paper
-      elevation={8}
+      elevation={0}
       sx={{
         position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
+        left: 12,
+        right: 12,
+        // Sit above the iPhone home indicator
+        bottom: 'calc(12px + env(safe-area-inset-bottom))',
         zIndex: (theme) => theme.zIndex.appBar,
         display: { xs: 'block', md: 'none' },
-        pb: 'env(safe-area-inset-bottom)', // space for the iPhone home indicator
+        borderRadius: 999,
+        overflow: 'hidden',
+        border: 1,
+        borderColor: 'divider',
+        backgroundColor: 'rgba(var(--mui-palette-background-paperChannel) / 0.75)',
+        backdropFilter: 'blur(16px) saturate(160%)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
       }}
     >
-      <BottomNavigation value={current} showLabels>
+      <BottomNavigation value={current} showLabels sx={{ bgcolor: 'transparent' }}>
         {navItems.map((item) => (
           <BottomNavigationAction
             key={item.to}
