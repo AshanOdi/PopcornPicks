@@ -20,7 +20,7 @@ interface MovieRowProps {
 }
 
 /** Card width per breakpoint; skeletons use the same size so nothing jumps when data arrives. */
-const CARD_WIDTH = { xs: 140, sm: 160, md: 180 };
+const CARD_WIDTH = { xs: 130, sm: 150, md: 170 };
 
 /** Arrow button shown on the left/right edge of the row on desktop. */
 function ScrollArrow({ direction, onClick }: { direction: 'left' | 'right'; onClick: () => void }) {

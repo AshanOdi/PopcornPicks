@@ -36,7 +36,7 @@ function SearchResults({ query }: { query: string }) {
           <Typography>No movies found. Try a different title.</Typography>
         </Box>
       ) : (
-        <MovieGrid movies={movies} loadingCount={loading ? PAGE_SIZE : 0} />
+        <MovieGrid movies={movies} loadingCount={loading ? PAGE_SIZE : 0} hasMore={hasMore} />
       )}
 
       {error && <ErrorAlert message={error} onRetry={retry} />}

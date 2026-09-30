@@ -35,12 +35,23 @@ function MovieCard({ movie }: { movie: MovieSummary }) {
             icon={<StarIcon sx={{ '&&': { color: '#f5c518' } }} />}
             label={rating}
             size="small"
-            sx={{ position: 'absolute', top: 8, left: 8, bgcolor: 'rgba(0,0,0,0.75)', color: '#fff', fontWeight: 600 }}
+            sx={{
+              position: 'absolute',
+              top: 6,
+              left: 6,
+              height: 22,
+              fontSize: 12,
+              bgcolor: 'rgba(0,0,0,0.7)',
+              backdropFilter: 'blur(4px)',
+              color: '#fff',
+              '& .MuiChip-label': { px: 0.75 },
+              '& .MuiChip-icon': { fontSize: 14 },
+            }}
           />
         </Box>
 
-        <CardContent sx={{ p: 1.5 }}>
-          <Typography variant="subtitle2" noWrap title={movie.title} sx={{ fontWeight: 600 }}>
+        <CardContent sx={{ px: 1.25, py: 1, '&:last-child': { pb: 1 } }}>
+          <Typography variant="body2" noWrap title={movie.title} sx={{ fontWeight: 700, lineHeight: 1.3 }}>
             {movie.title}
           </Typography>
           <Typography variant="caption" color="text.secondary">

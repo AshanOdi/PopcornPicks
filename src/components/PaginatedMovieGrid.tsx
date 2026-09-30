@@ -42,7 +42,7 @@ function PaginatedMovieGrid({ title, icon, fetchPage, emptyMessage = 'No movies 
           <Typography>{emptyMessage}</Typography>
         </Box>
       ) : (
-        <MovieGrid movies={movies} loadingCount={loading && page === 1 ? PAGE_SIZE : 0} />
+        <MovieGrid movies={movies} loadingCount={loading && page === 1 ? PAGE_SIZE : 0} hasMore={hasMore} />
       )}
 
       {error ? (
