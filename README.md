@@ -8,7 +8,7 @@
 
 A responsive movie explorer built with React, TypeScript and Material UI, powered by live data from [The Movie Database (TMDb)](https://www.themoviedb.org/).
 
-**🔗 Live demo:** _LIVE_DEMO_URL_
+**[🔗 Live demo](https://popcorn-picks-three.vercel.app)** · [GitLab](https://gitlab.com/AshanOdi/PopcornPicks) · [GitHub](https://github.com/AshanOdi/PopcornPicks)
 
 </div>
 
@@ -31,7 +31,9 @@ A responsive movie explorer built with React, TypeScript and Material UI, powere
 
 ## Demo account
 
-Login uses real **TMDb authentication**, so you can sign in with any TMDb account, or use this demo account:
+Just exploring? Click **Continue as guest** on the login page, no account needed.
+
+To try the real login, which uses **TMDb authentication**, sign in with any TMDb account or this demo account:
 
 | Username | Password |
 |---|---|
@@ -47,7 +49,7 @@ Login uses real **TMDb authentication**, so you can sign in with any TMDb accoun
 
 | Requirement | Implementation |
 |---|---|
-| Login with username and password | Real TMDb login (request token → validate with login → session). Protected routes redirect to `/login` and return the user to the page they wanted afterwards. |
+| Login with username and password | Real TMDb login (request token → validate with login → session), plus a **Continue as guest** option. Protected routes redirect to `/login` and return the user to the page they wanted afterwards. |
 | Search bar | Debounced search (500 ms) so the API is called once the user stops typing, not on every keystroke. Enter searches immediately. |
 | Poster grid with title, year and rating | Responsive grid (2 / 3 / 5 / 6 columns) that always fills complete rows. |
 | Movie details | Backdrop hero, poster, overview, genres, runtime, rating, release date, auto-scrolling top cast and YouTube trailer. Details, cast and videos arrive in **one** request. |
@@ -102,8 +104,8 @@ Login uses real **TMDb authentication**, so you can sign in with any TMDb accoun
 ### Setup
 
 ```bash
-# 1. Clone
-git clone https://github.com/AshanOdi/PopcornPicks.git
+# 1. Clone (GitLab or GitHub, same code)
+git clone https://gitlab.com/AshanOdi/PopcornPicks.git
 cd PopcornPicks
 
 # 2. Install dependencies
@@ -231,7 +233,7 @@ All protected pages share one `Layout` route wrapped in `ProtectedRoute`, so the
 
 | State | Where | Persisted |
 |---|---|---|
-| Session + user account | `AuthContext` | `localStorage` (`popcornpicks_auth`) |
+| Session + user account (or guest) | `AuthContext` | `localStorage` (`popcornpicks_auth`) |
 | Favorites | `MovieContext` | `localStorage` (`popcornpicks_favorites`) |
 | Last search | `MovieContext` | `localStorage` (`popcornpicks_last_search`) |
 | Theme (light/dark) | MUI `useColorScheme` | `localStorage` (`mui-mode`) |
@@ -312,7 +314,7 @@ All calls go through one axios instance in [`src/api/tmdb.ts`](src/api/tmdb.ts) 
 
 ## Deployment
 
-The app is a static single-page app, deployed on **Vercel**:
+The app is a static single-page app, deployed on **Vercel** at **https://popcorn-picks-three.vercel.app**. Every push to `main` redeploys automatically.
 
 1. Import the repository on [vercel.com/new](https://vercel.com/new). The framework preset **Vite** is detected automatically.
 2. Add the environment variable `VITE_TMDB_TOKEN`.
