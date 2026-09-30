@@ -1,15 +1,19 @@
 // Types for the parts of the TMDb API responses we use.
 // Full reference: https://developer.themoviedb.org/reference
 
-/** A movie as returned in lists (trending, search, discover). */
-export interface Movie {
+/** The minimum a MovieCard needs. Also what we store for favorites. */
+export interface MovieSummary {
   id: number;
   title: string;
-  overview: string;
   poster_path: string | null;
-  backdrop_path: string | null;
   release_date: string; // "YYYY-MM-DD", may be empty
   vote_average: number;
+}
+
+/** A movie as returned in lists (trending, search, discover). */
+export interface Movie extends MovieSummary {
+  overview: string;
+  backdrop_path: string | null;
   vote_count: number;
   genre_ids: number[];
 }
