@@ -40,9 +40,12 @@ function Navbar() {
           }}
         >
           <Toolbar disableGutters sx={{ gap: 1, minHeight: { xs: 56, sm: 60 } }}>
-            <Box component={RouterLink} to="/" aria-label="PopcornPicks home" sx={{ color: 'inherit', textDecoration: 'none', flexGrow: 1 }}>
+            <Box component={RouterLink} to="/" aria-label="PopcornPicks home" sx={{ color: 'inherit', textDecoration: 'none' }}>
               <Logo />
             </Box>
+
+            {/* Empty spacer pushes the links to the right (kept separate so the gap isn't clickable) */}
+            <Box sx={{ flexGrow: 1 }} />
 
             {/* `end` stops "/" from matching every page; NavLink adds the "active" class on the current page */}
             {navItems.map((item) => (
