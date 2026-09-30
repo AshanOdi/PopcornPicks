@@ -5,13 +5,14 @@ import TheatersIcon from '@mui/icons-material/Theaters';
 import SearchBar from '../components/SearchBar';
 import SearchResults from '../components/SearchResults';
 import MovieRow from '../components/MovieRow';
+import HeroBanner from '../components/HeroBanner';
 import { useMovies } from '../hooks/useMovies';
 import { getNowPlayingMovies, getTopRatedMovies, getTrendingMovies } from '../api/tmdb';
 
 /**
  * Home page:
  * - searching -> search results grid (infinite scroll)
- * - otherwise -> browsable rows, each with "See all" to the Discover page
+ * - otherwise -> featured hero + browsable rows, each with "See all" to the Discover page
  */
 function Home() {
   const { lastSearch, setLastSearch } = useMovies();
@@ -25,6 +26,7 @@ function Home() {
         <SearchResults key={lastSearch} query={lastSearch} />
       ) : (
         <Stack spacing={{ xs: 3, sm: 4 }}>
+          <HeroBanner />
           <MovieRow
             title="Trending this week"
             icon={<WhatshotIcon color="primary" />}
