@@ -4,14 +4,16 @@ const SPEED_PX_PER_SECOND = 30;
 /** How long to wait after the user stops interacting before auto-scroll resumes */
 const RESUME_AFTER_HOVER_MS = 600;
 const RESUME_AFTER_TOUCH_MS = 3000;
+/** Rest at each end before turning around */
+const EDGE_PAUSE_MS = 2000;
 
 /**
- * Slowly auto-scrolls a horizontal scroll container, looping forever.
- * The list inside must be rendered twice: when we reach the start of the second copy,
- * we jump back by half the width, which looks identical, so the loop is seamless.
+ * Slowly auto-scrolls a horizontal scroll container back and forth:
+ * to the end, rest, back to the start, rest, repeat. Every item appears once (no duplicate copies).
  *
  * Unlike a CSS animation, this moves the real scroll position, so the user can still
  * swipe, use a trackpad or click arrows. Auto-scroll pauses during hover/touch and resumes after.
+ * Does nothing when the content fits without scrolling.
  *
  * @param scrollerRef the element with `overflow-x: auto`
  * @param areaRef     the element whose hover/touch should pause scrolling (e.g. the row + its arrows)
@@ -34,17 +36,31 @@ export function useAutoScroll(
     let lastTime = performance.now();
     // Track the position as a float: the browser rounds scrollLeft, which would stall tiny steps
     let position = scroller.scrollLeft;
+    let direction = 1; // 1 = moving right, -1 = moving left
+    let restUntil = 0; // timestamp until which we rest at an end
 
     function tick(now: number) {
-      const seconds = (now - lastTime) / 1000;
+      // The first frame's timestamp can be slightly before the effect started; never step backwards
+      const seconds = Math.max(0, (now - lastTime) / 1000);
       lastTime = now;
+      const maxScroll = scroller!.scrollWidth - scroller!.clientWidth;
 
-      if (paused) {
+      if (paused || maxScroll <= 0) {
         position = scroller!.scrollLeft; // follow manual scrolling
-      } else {
-        const half = scroller!.scrollWidth / 2;
-        position += SPEED_PX_PER_SECOND * seconds;
-        if (position >= half) position -= half; // jump from the 2nd copy back to the same spot in the 1st
+      } else if (now >= restUntil) {
+        position += direction * SPEED_PX_PER_SECOND * seconds;
+
+        // Reached the end we're moving toward: stop exactly there, rest, then turn around.
+        // (Checking only that end means starting at 0 moving right doesn't count as "arrived".)
+        if (direction === 1 && position >= maxScroll) {
+          position = maxScroll;
+          direction = -1;
+          restUntil = now + EDGE_PAUSE_MS;
+        } else if (direction === -1 && position <= 0) {
+          position = 0;
+          direction = 1;
+          restUntil = now + EDGE_PAUSE_MS;
+        }
         scroller!.scrollLeft = position;
       }
       frame = requestAnimationFrame(tick);

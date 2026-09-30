@@ -7,20 +7,19 @@ import { imageUrl } from '../api/tmdb';
 import type { CastMember } from '../types/tmdb';
 
 const MAX_CAST = 12;
-/** Below this many people there's nothing to scroll, so the row stays still. */
-const MIN_CAST_TO_ANIMATE = 6;
+/**
+ * Width of the soft fade at each edge. The row has the same padding at both ends,
+ * so the first and last person are fully visible when the row is at the start/end.
+ */
+const EDGE_FADE_PX = 48;
 
-function CastCard({ person, duplicate }: { person: CastMember; duplicate: boolean }) {
+function CastCard({ person }: { person: CastMember }) {
   return (
     <Box
       component="li"
-      // The second copy is only there for the loop; hide it from screen readers
-      aria-hidden={duplicate || undefined}
       sx={{
         flex: '0 0 auto',
         width: 100,
-        // Spacing as margin (not flex gap) so both copies are exactly the same width -> seamless loop
-        mr: 3,
         textAlign: 'center',
         '&:hover .cast-avatar': {
           transform: 'scale(1.15)',
@@ -47,21 +46,18 @@ function CastCard({ person, duplicate }: { person: CastMember; duplicate: boolea
 }
 
 /**
- * Top-billed cast: slowly auto-scrolls in an endless loop, and can also be scrolled
- * manually (swipe, trackpad, ‹ › arrows). Hover pauses it and enlarges the avatar.
+ * Top-billed cast: slowly scrolls back and forth on its own, and can be scrolled manually
+ * (swipe, trackpad, ‹ › arrows). Hover pauses it and enlarges the avatar.
  */
 function CastList({ cast }: { cast: CastMember[] }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const areaRef = useRef<HTMLDivElement>(null);
 
   const topCast = cast.slice(0, MAX_CAST);
-  const animate = topCast.length >= MIN_CAST_TO_ANIMATE;
-  useAutoScroll(scrollerRef, areaRef, animate);
+  // Only moves when the row is wider than the screen (the hook checks this)
+  useAutoScroll(scrollerRef, areaRef, topCast.length > 0);
 
   if (topCast.length === 0) return null;
-
-  // Render the list twice for a seamless loop
-  const items = animate ? [...topCast, ...topCast] : topCast;
 
   return (
     <Box component="section" sx={{ mt: 4 }}>
@@ -70,7 +66,7 @@ function CastList({ cast }: { cast: CastMember[] }) {
       </Typography>
 
       <Box ref={areaRef} sx={{ position: 'relative', '&:hover .row-arrow': { opacity: 1 } }}>
-        {animate && <ScrollArrow direction="left" top="38%" onClick={() => scrollRow(scrollerRef.current, 'left')} />}
+        <ScrollArrow direction="left" top="38%" onClick={() => scrollRow(scrollerRef.current, 'left')} />
 
         <Box
           ref={scrollerRef}
@@ -80,21 +76,30 @@ function CastList({ cast }: { cast: CastMember[] }) {
             // Hide the scrollbar (still scrollable by swipe, trackpad and arrows)
             scrollbarWidth: 'none',
             '&::-webkit-scrollbar': { display: 'none' },
-            // The row is always moving, so someone is always half-way off an edge.
-            // A wide, fixed-size fade (same on every screen) makes them dissolve in/out instead of looking cut off.
-            maskImage: animate
-              ? 'linear-gradient(90deg, transparent, #000 72px, #000 calc(100% - 72px), transparent)'
-              : undefined,
+            // Soft fade at both edges so people glide in and out
+            maskImage: `linear-gradient(90deg, transparent, #000 ${EDGE_FADE_PX}px, #000 calc(100% - ${EDGE_FADE_PX}px), transparent)`,
           }}
         >
-          <Box component="ul" sx={{ display: 'flex', width: 'max-content', listStyle: 'none', p: 0, m: 0 }}>
-            {items.map((person, i) => (
-              <CastCard key={`${person.id}-${i}`} person={person} duplicate={i >= topCast.length} />
+          <Box
+            component="ul"
+            sx={{
+              display: 'flex',
+              gap: 3,
+              width: 'max-content',
+              listStyle: 'none',
+              m: 0,
+              py: 0,
+              // Padding = fade width, so at the start/end nobody sits inside the fade
+              px: `${EDGE_FADE_PX}px`,
+            }}
+          >
+            {topCast.map((person) => (
+              <CastCard key={person.id} person={person} />
             ))}
           </Box>
         </Box>
 
-        {animate && <ScrollArrow direction="right" top="38%" onClick={() => scrollRow(scrollerRef.current, 'right')} />}
+        <ScrollArrow direction="right" top="38%" onClick={() => scrollRow(scrollerRef.current, 'right')} />
       </Box>
     </Box>
   );
