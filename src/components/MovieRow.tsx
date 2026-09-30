@@ -85,7 +85,13 @@ function MovieRow({ title, icon, fetchPage, seeAllTo }: MovieRowProps) {
               gap: { xs: 1.5, sm: 2 },
               overflowX: 'auto',
               scrollSnapType: 'x mandatory',
-              pb: 1,
+              // A scroll container clips everything outside it, including the card's hover lift + shadow.
+              // Padding gives the shadow room; the matching negative margin keeps the row in the same place.
+              py: 2,
+              my: -2,
+              px: 1,
+              mx: -1,
+              scrollPaddingInline: 8, // snap cards to the padded edge, not the clipped one
               // Hide the scrollbar (still scrollable by swipe, trackpad and arrows)
               scrollbarWidth: 'none',
               '&::-webkit-scrollbar': { display: 'none' },
