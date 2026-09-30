@@ -6,9 +6,12 @@ import { AuthContext, type AuthContextValue } from './AuthContext';
 const STORAGE_KEY = 'popcornpicks_auth';
 
 interface StoredAuth {
-  sessionId: string;
+  /** null for guests (no TMDb session) */
+  sessionId: string | null;
   account: Account;
 }
+
+const GUEST_ACCOUNT: Account = { id: 0, username: 'guest', name: 'Guest' };
 
 /** Reads a saved session from localStorage (returns null if missing or corrupted). */
 function loadStoredAuth(): StoredAuth | null {
@@ -33,8 +36,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuth(next);
   }, []);
 
+  /** Browse without an account. The app only needs a session for login; all movie data uses the API token. */
+  const loginAsGuest = useCallback(() => {
+    const next: StoredAuth = { sessionId: null, account: GUEST_ACCOUNT };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    setAuth(next);
+  }, []);
+
   const logout = useCallback(async () => {
-    if (auth) {
+    if (auth?.sessionId) {
       // Best effort: log out locally even if the API call fails
       await api.logout(auth.sessionId).catch(() => undefined);
     }
@@ -44,8 +54,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // useMemo keeps the same object between renders, so consumers only re-render when auth changes
   const value = useMemo<AuthContextValue>(
-    () => ({ user: auth?.account ?? null, isAuthenticated: auth !== null, login, logout }),
-    [auth, login, logout],
+    () => ({
+      user: auth?.account ?? null,
+      isAuthenticated: auth !== null,
+      isGuest: auth !== null && auth.sessionId === null,
+      login,
+      loginAsGuest,
+      logout,
+    }),
+    [auth, login, loginAsGuest, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

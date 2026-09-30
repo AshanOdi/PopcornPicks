@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Divider,
   IconButton,
   InputAdornment,
   Link,
@@ -14,13 +15,14 @@ import {
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutlineOutlined';
 import ThemeToggle from '../components/ThemeToggle';
 import { useAuth } from '../hooks/useAuth';
 import { getErrorMessage } from '../api/tmdb';
 
 /** Login with a TMDb username and password. */
 function Login() {
-  const { login, isAuthenticated } = useAuth();
+  const { login, loginAsGuest, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -55,6 +57,11 @@ function Login() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleGuest() {
+    loginAsGuest();
+    navigate(from, { replace: true });
   }
 
   return (
@@ -124,7 +131,14 @@ function Login() {
           </Button>
         </Box>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 3, textAlign: 'center' }}>
+        <Divider sx={{ my: 2.5, color: 'text.secondary', typography: 'body2' }}>or</Divider>
+
+        {/* Explore the app without an account (favorites and last search still work, stored in this browser) */}
+        <Button variant="outlined" size="large" fullWidth startIcon={<PersonOutlineIcon />} onClick={handleGuest} disabled={loading}>
+          Continue as guest
+        </Button>
+
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2.5, textAlign: 'center' }}>
           No account?{' '}
           <Link href="https://www.themoviedb.org/signup" target="_blank" rel="noopener">
             Sign up on TMDb

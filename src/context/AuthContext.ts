@@ -4,7 +4,10 @@ import type { Account } from '../types/tmdb';
 export interface AuthContextValue {
   user: Account | null;
   isAuthenticated: boolean;
+  /** Browsing without a TMDb account (no session) */
+  isGuest: boolean;
   login: (username: string, password: string) => Promise<void>;
+  loginAsGuest: () => void;
   logout: () => Promise<void>;
 }
 
