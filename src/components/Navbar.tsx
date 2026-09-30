@@ -13,7 +13,19 @@ function Navbar() {
   const navItems = useNavItems();
 
   return (
-    <AppBar position="sticky" color="default" elevation={1}>
+    // "Glass" bar: semi-transparent background + blur, so content shows through softly while scrolling
+    <AppBar
+      position="sticky"
+      color="transparent"
+      elevation={0}
+      sx={{
+        // MUI CSS variable with the background color as "r g b", so we can add transparency
+        backgroundColor: 'rgba(var(--mui-palette-background-defaultChannel) / 0.75)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: 1,
+        borderColor: 'divider',
+      }}
+    >
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ gap: 1 }}>
           <Box component={RouterLink} to="/" aria-label="PopcornPicks home" sx={{ color: 'inherit', textDecoration: 'none', flexGrow: 1 }}>

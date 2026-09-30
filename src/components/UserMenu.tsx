@@ -24,7 +24,7 @@ function UserMenu() {
     <>
       <Tooltip title="Account">
         <IconButton onClick={(e: MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget)} aria-label="account menu">
-          <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: 16 }}>
+          <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', color: 'primary.contrastText', fontSize: 16, fontWeight: 700 }}>
             {displayName.charAt(0).toUpperCase()}
           </Avatar>
         </IconButton>

@@ -31,7 +31,7 @@ function FavoriteButton({ movie, variant = 'icon' }: FavoriteButtonProps) {
         size="large"
         onClick={handleClick}
         startIcon={saved ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        sx={{ color: saved ? 'primary.light' : '#fff', borderColor: 'rgba(255,255,255,0.5)' }}
+        sx={{ color: saved ? 'secondary.main' : '#fff', borderColor: 'rgba(255,255,255,0.5)' }}
       >
         {saved ? 'Favorited' : 'Add to favorites'}
       </Button>
@@ -47,7 +47,7 @@ function FavoriteButton({ movie, variant = 'icon' }: FavoriteButtonProps) {
         size="small"
         sx={{
           bgcolor: 'rgba(0,0,0,0.6)',
-          color: saved ? 'primary.light' : '#fff',
+          color: saved ? 'secondary.main' : '#fff',
           '&:hover': { bgcolor: 'rgba(0,0,0,0.8)' },
         }}
       >
