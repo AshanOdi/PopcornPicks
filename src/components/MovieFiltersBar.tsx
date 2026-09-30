@@ -8,6 +8,20 @@ const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: CURRENT_YEAR - 1950 + 1 }, (_, i) => CURRENT_YEAR - i);
 const RATINGS = [5, 6, 7, 8];
 
+/**
+ * Open each dropdown BELOW its field. By default MUI places the menu on top of the field,
+ * so the mouse release from the opening click could land on an option and select it by accident.
+ */
+const selectSlotProps = {
+  select: {
+    MenuProps: {
+      anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
+      transformOrigin: { vertical: 'top', horizontal: 'left' },
+      slotProps: { paper: { sx: { maxHeight: 320, mt: 0.5 } } },
+    },
+  },
+} as const;
+
 interface MovieFiltersBarProps {
   value: MovieFilters;
   onChange: (filters: MovieFilters) => void;
@@ -33,6 +47,7 @@ function MovieFiltersBar({ value, onChange }: MovieFiltersBarProps) {
     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 1.5, sm: 2 }} sx={{ mb: 3 }}>
       <TextField
         select
+        slotProps={selectSlotProps}
         label="Genre"
         size="small"
         value={value.genreId ?? ''}
@@ -49,6 +64,7 @@ function MovieFiltersBar({ value, onChange }: MovieFiltersBarProps) {
 
       <TextField
         select
+        slotProps={selectSlotProps}
         label="Year"
         size="small"
         value={value.year ?? ''}
@@ -65,6 +81,7 @@ function MovieFiltersBar({ value, onChange }: MovieFiltersBarProps) {
 
       <TextField
         select
+        slotProps={selectSlotProps}
         label="Rating"
         size="small"
         value={value.minRating ?? ''}
