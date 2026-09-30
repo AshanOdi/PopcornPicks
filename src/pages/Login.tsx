@@ -12,7 +12,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import ThemeToggle from '../components/ThemeToggle';
@@ -66,8 +65,8 @@ function Login() {
 
       <Paper elevation={3} sx={{ width: '100%', maxWidth: 400, p: { xs: 3, sm: 4 } }}>
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <MovieFilterIcon color="primary" sx={{ fontSize: 48 }} />
-          <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          <Box component="img" src="/popcorn_picks_icon_transparent.png" alt="" sx={{ height: 80, width: 'auto', mb: 1 }} />
+          <Typography variant="h5" component="h1" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
             Popcorn<Box component="span" sx={{ color: 'primary.main' }}>Picks</Box>
           </Typography>
           <Typography variant="body2" color="text.secondary">
