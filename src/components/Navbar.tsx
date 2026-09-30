@@ -3,6 +3,7 @@ import { NavLink, Link as RouterLink } from 'react-router-dom';
 import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ThemeToggle from './ThemeToggle';
+import UserMenu from './UserMenu';
 
 /** Top navigation bar shown on every page. */
 function Navbar() {
@@ -45,6 +46,7 @@ function Navbar() {
           </Tooltip>
 
           <ThemeToggle />
+          <UserMenu />
         </Toolbar>
       </Container>
     </AppBar>
