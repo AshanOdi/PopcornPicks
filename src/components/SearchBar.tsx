@@ -42,12 +42,23 @@ function SearchBar({ initialValue = '', onSearch }: SearchBarProps) {
   }
 
   return (
-    <Box component="form" onSubmit={handleSubmit} role="search" sx={{ mb: { xs: 2, sm: 3 } }}>
+    <Box component="form" onSubmit={handleSubmit} role="search">
       <TextField
         value={value}
         onChange={(e) => handleChange(e.target.value)}
         placeholder="Search for a movie..."
         fullWidth
+        size="medium"
+        // Glass pill: rounded, semi-transparent, blurred, with a soft shadow
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 999,
+            bgcolor: 'rgba(var(--mui-palette-background-paperChannel) / 0.8)',
+            backdropFilter: 'blur(16px)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25)',
+            pl: 1,
+          },
+        }}
         slotProps={{
           htmlInput: { 'aria-label': 'search movies' },
           input: {

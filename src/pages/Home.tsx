@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import StarIcon from '@mui/icons-material/Star';
 import TheatersIcon from '@mui/icons-material/Theaters';
@@ -11,22 +11,37 @@ import { getNowPlayingMovies, getTopRatedMovies, getTrendingMovies } from '../ap
 
 /**
  * Home page:
- * - searching -> search results grid (infinite scroll)
- * - otherwise -> featured hero + browsable rows, each with "See all" to the Discover page
+ * - browsing  -> full-width hero, search pill overlapping its bottom edge, then movie rows
+ * - searching -> search pill on top, then the results grid (infinite scroll)
  */
 function Home() {
   const { lastSearch, setLastSearch } = useMovies();
+  const searching = Boolean(lastSearch);
 
   return (
     <>
-      <SearchBar initialValue={lastSearch} onSearch={setLastSearch} />
+      {/* `searching ? null : ...` keeps the SearchBar at the same place in the React tree,
+          so the input keeps focus when the hero disappears while typing */}
+      {searching ? null : <HeroBanner />}
+
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          maxWidth: 720,
+          mx: 'auto',
+          mt: searching ? 0 : { xs: -4, sm: -5 }, // overlap the hero's bottom edge
+          mb: { xs: 3, sm: 4 },
+        }}
+      >
+        <SearchBar initialValue={lastSearch} onSearch={setLastSearch} />
+      </Box>
 
       {/* key={lastSearch} gives each new search a fresh SearchResults (page 1, empty list) */}
-      {lastSearch ? (
+      {searching ? (
         <SearchResults key={lastSearch} query={lastSearch} />
       ) : (
         <Stack spacing={{ xs: 3, sm: 4 }}>
-          <HeroBanner />
           <MovieRow
             title="Trending this week"
             icon={<WhatshotIcon color="primary" />}

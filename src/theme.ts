@@ -89,6 +89,12 @@ const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: (theme) => ({
+        // Full-bleed sections (hero) use 100vw, which includes the scrollbar width.
+        // "clip" hides that tiny overflow without breaking the sticky navbar (unlike "hidden").
+        body: {
+          overflowX: "clip",
+        },
+
         // Ambient "cinema light" glows behind the whole app: gold top-left, red right, violet bottom.
         // A fixed pseudo-element stays put while scrolling and never affects layout or clicks.
         "body::before": {
