@@ -1,44 +1,15 @@
-import { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import MovieGrid from './MovieGrid';
 import ErrorAlert from './ErrorAlert';
-import { getErrorMessage, getTrendingMovies } from '../api/tmdb';
-import type { Movie } from '../types/tmdb';
+import LoadMoreButton from './LoadMoreButton';
+import { usePaginatedMovies } from '../hooks/usePaginatedMovies';
+import { getTrendingMovies } from '../api/tmdb';
 
-/** "Trending this week" section, loaded from TMDb. */
+/** "Trending this week" section with a Load More button. */
 function TrendingMovies() {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  // Changing this number re-runs the effect below (used by "Try again")
-  const [reloadKey, setReloadKey] = useState(0);
-
-  useEffect(() => {
-    // Ignore the response if the component unmounted or the effect re-ran before it arrived
-    let ignore = false;
-
-    getTrendingMovies()
-      .then((data) => {
-        if (!ignore) setMovies(data.results);
-      })
-      .catch((err) => {
-        if (!ignore) setError(getErrorMessage(err));
-      })
-      .finally(() => {
-        if (!ignore) setLoading(false);
-      });
-
-    return () => {
-      ignore = true;
-    };
-  }, [reloadKey]);
-
-  function handleRetry() {
-    setError(null);
-    setLoading(true);
-    setReloadKey((key) => key + 1);
-  }
+  // getTrendingMovies is a module-level function, so it's already stable
+  const { movies, page, loading, error, hasMore, loadMore, retry } = usePaginatedMovies(getTrendingMovies);
 
   return (
     <Box component="section">
@@ -46,10 +17,12 @@ function TrendingMovies() {
         <WhatshotIcon color="primary" /> Trending this week
       </Typography>
 
+      <MovieGrid movies={movies} loadingCount={loading && page === 1 ? 12 : 0} />
+
       {error ? (
-        <ErrorAlert message={error} onRetry={handleRetry} />
+        <ErrorAlert message={error} onRetry={retry} />
       ) : (
-        <MovieGrid movies={movies} loadingCount={loading ? 12 : 0} />
+        <LoadMoreButton hasMore={hasMore} loading={loading} onClick={loadMore} />
       )}
     </Box>
   );
