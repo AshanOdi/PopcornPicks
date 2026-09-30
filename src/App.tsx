@@ -4,6 +4,7 @@ import { MovieProvider } from './context/MovieProvider';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
+import Discover from './pages/Discover';
 import MovieDetails from './pages/MovieDetails';
 import Favorites from './pages/Favorites';
 import Login from './pages/Login';
@@ -27,6 +28,7 @@ function App() {
               }
             >
               <Route path="/" element={<Home />} />
+              <Route path="/discover" element={<Discover />} />
               <Route path="/movie/:id" element={<MovieDetails />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="*" element={<NotFound />} />
