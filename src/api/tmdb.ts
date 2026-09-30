@@ -24,7 +24,7 @@ const tmdb = axios.create({
 });
 
 /** Builds a full image URL from a TMDb path. Returns null when there is no image. */
-export function imageUrl(path: string | null, size: 'w185' | 'w342' | 'w500' | 'w780' | 'original' = 'w500') {
+export function imageUrl(path: string | null, size: 'w185' | 'w342' | 'w500' | 'w780' | 'w1280' | 'original' = 'w500') {
   return path ? `${IMAGE_BASE_URL}/${size}${path}` : null;
 }
 
