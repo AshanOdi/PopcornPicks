@@ -1,19 +1,14 @@
+import { useRef } from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
-import { keyframes } from '@emotion/react';
+import ScrollArrow from './ScrollArrow';
+import { scrollRow } from '../utils/scroll';
+import { useAutoScroll } from '../hooks/useAutoScroll';
 import { imageUrl } from '../api/tmdb';
 import type { CastMember } from '../types/tmdb';
 
 const MAX_CAST = 12;
 /** Below this many people there's nothing to scroll, so the row stays still. */
 const MIN_CAST_TO_ANIMATE = 6;
-/** Seconds per cast member for one full loop (higher = slower). */
-const SECONDS_PER_PERSON = 4;
-
-/** Slides the doubled list left by half its width; the second copy then sits exactly where the first began. */
-const marquee = keyframes`
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-`;
 
 function CastCard({ person, duplicate }: { person: CastMember; duplicate: boolean }) {
   return (
@@ -21,14 +16,12 @@ function CastCard({ person, duplicate }: { person: CastMember; duplicate: boolea
       component="li"
       // The second copy is only there for the loop; hide it from screen readers
       aria-hidden={duplicate || undefined}
-      data-duplicate={duplicate || undefined}
       sx={{
         flex: '0 0 auto',
         width: 100,
-        // Spacing as padding (not flex gap) so both copies are exactly the same width -> seamless loop
+        // Spacing as margin (not flex gap) so both copies are exactly the same width -> seamless loop
         mr: 3,
         textAlign: 'center',
-        cursor: 'default',
         '&:hover .cast-avatar': {
           transform: 'scale(1.15)',
           boxShadow: '0 0 0 3px var(--mui-palette-primary-main), 0 8px 20px rgba(0,0,0,0.35)',
@@ -53,12 +46,20 @@ function CastCard({ person, duplicate }: { person: CastMember; duplicate: boolea
   );
 }
 
-/** Top-billed cast as a slow, endless auto-scrolling row. Hover pauses it and enlarges the avatar. */
+/**
+ * Top-billed cast: slowly auto-scrolls in an endless loop, and can also be scrolled
+ * manually (swipe, trackpad, ‹ › arrows). Hover pauses it and enlarges the avatar.
+ */
 function CastList({ cast }: { cast: CastMember[] }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const areaRef = useRef<HTMLDivElement>(null);
+
   const topCast = cast.slice(0, MAX_CAST);
+  const animate = topCast.length >= MIN_CAST_TO_ANIMATE;
+  useAutoScroll(scrollerRef, areaRef, animate);
+
   if (topCast.length === 0) return null;
 
-  const animate = topCast.length >= MIN_CAST_TO_ANIMATE;
   // Render the list twice for a seamless loop
   const items = animate ? [...topCast, ...topCast] : topCast;
 
@@ -68,37 +69,29 @@ function CastList({ cast }: { cast: CastMember[] }) {
         Top cast
       </Typography>
 
-      <Box
-        sx={{
-          overflow: 'hidden',
-          py: 1.5, // room for the enlarged avatar
-          // Fade the left/right edges so people glide in and out
-          maskImage: animate ? 'linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent)' : undefined,
-          // Users who prefer less motion get a normal, manually scrollable row
-          '@media (prefers-reduced-motion: reduce)': {
-            overflowX: 'auto',
-            maskImage: 'none',
-            '& [data-duplicate]': { display: 'none' },
-          },
-        }}
-      >
+      <Box ref={areaRef} sx={{ position: 'relative', '&:hover .row-arrow': { opacity: 1 } }}>
+        {animate && <ScrollArrow direction="left" top="38%" onClick={() => scrollRow(scrollerRef.current, 'left')} />}
+
         <Box
-          component="ul"
+          ref={scrollerRef}
           sx={{
-            display: 'flex',
-            width: 'max-content',
-            listStyle: 'none',
-            p: 0,
-            m: 0,
-            animation: animate ? `${marquee} ${topCast.length * SECONDS_PER_PERSON}s linear infinite` : 'none',
-            '&:hover': { animationPlayState: 'paused' },
-            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+            overflowX: 'auto',
+            py: 1.5, // room for the enlarged avatar
+            // Hide the scrollbar (still scrollable by swipe, trackpad and arrows)
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': { display: 'none' },
+            // Fade the left/right edges so people glide in and out
+            maskImage: animate ? 'linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent)' : undefined,
           }}
         >
-          {items.map((person, i) => (
-            <CastCard key={`${person.id}-${i}`} person={person} duplicate={i >= topCast.length} />
-          ))}
+          <Box component="ul" sx={{ display: 'flex', width: 'max-content', listStyle: 'none', p: 0, m: 0 }}>
+            {items.map((person, i) => (
+              <CastCard key={`${person.id}-${i}`} person={person} duplicate={i >= topCast.length} />
+            ))}
+          </Box>
         </Box>
+
+        {animate && <ScrollArrow direction="right" top="38%" onClick={() => scrollRow(scrollerRef.current, 'right')} />}
       </Box>
     </Box>
   );

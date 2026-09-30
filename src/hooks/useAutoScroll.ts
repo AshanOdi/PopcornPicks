@@ -1,0 +1,88 @@
+import { useEffect, type RefObject } from 'react';
+
+const SPEED_PX_PER_SECOND = 30;
+/** How long to wait after the user stops interacting before auto-scroll resumes */
+const RESUME_AFTER_HOVER_MS = 600;
+const RESUME_AFTER_TOUCH_MS = 3000;
+
+/**
+ * Slowly auto-scrolls a horizontal scroll container, looping forever.
+ * The list inside must be rendered twice: when we reach the start of the second copy,
+ * we jump back by half the width, which looks identical, so the loop is seamless.
+ *
+ * Unlike a CSS animation, this moves the real scroll position, so the user can still
+ * swipe, use a trackpad or click arrows. Auto-scroll pauses during hover/touch and resumes after.
+ *
+ * @param scrollerRef the element with `overflow-x: auto`
+ * @param areaRef     the element whose hover/touch should pause scrolling (e.g. the row + its arrows)
+ */
+export function useAutoScroll(
+  scrollerRef: RefObject<HTMLElement | null>,
+  areaRef: RefObject<HTMLElement | null>,
+  enabled: boolean,
+) {
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    const area = areaRef.current;
+    if (!scroller || !area || !enabled) return;
+    // Respect the OS "reduce motion" setting: manual scrolling only
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let paused = false;
+    let resumeTimer: ReturnType<typeof setTimeout> | undefined;
+    let frame = 0;
+    let lastTime = performance.now();
+    // Track the position as a float: the browser rounds scrollLeft, which would stall tiny steps
+    let position = scroller.scrollLeft;
+
+    function tick(now: number) {
+      const seconds = (now - lastTime) / 1000;
+      lastTime = now;
+
+      if (paused) {
+        position = scroller!.scrollLeft; // follow manual scrolling
+      } else {
+        const half = scroller!.scrollWidth / 2;
+        position += SPEED_PX_PER_SECOND * seconds;
+        if (position >= half) position -= half; // jump from the 2nd copy back to the same spot in the 1st
+        scroller!.scrollLeft = position;
+      }
+      frame = requestAnimationFrame(tick);
+    }
+
+    function pause() {
+      paused = true;
+      clearTimeout(resumeTimer);
+    }
+
+    function resumeAfter(ms: number) {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => {
+        position = scroller!.scrollLeft;
+        paused = false;
+      }, ms);
+    }
+
+    const onMouseLeave = () => resumeAfter(RESUME_AFTER_HOVER_MS);
+    const onTouchEnd = () => resumeAfter(RESUME_AFTER_TOUCH_MS);
+
+    area.addEventListener('mouseenter', pause);
+    area.addEventListener('mouseleave', onMouseLeave);
+    area.addEventListener('touchstart', pause, { passive: true });
+    area.addEventListener('touchend', onTouchEnd);
+    area.addEventListener('focusin', pause); // keyboard users
+    area.addEventListener('focusout', onMouseLeave);
+    frame = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(resumeTimer);
+      area.removeEventListener('mouseenter', pause);
+      area.removeEventListener('mouseleave', onMouseLeave);
+      area.removeEventListener('touchstart', pause);
+      area.removeEventListener('touchend', onTouchEnd);
+      area.removeEventListener('focusin', pause);
+      area.removeEventListener('focusout', onMouseLeave);
+    };
+  }, [scrollerRef, areaRef, enabled]);
+}
