@@ -41,7 +41,7 @@ function Home() {
           mb: { xs: 3, sm: 4 },
         }}
       >
-        <SearchBar initialValue={lastSearch} onSearch={handleSearch} />
+        <SearchBar initialValue={lastSearch} onSearch={handleSearch} active={searching} />
       </Box>
 
       {/* key={lastSearch} gives each new search a fresh SearchResults (page 1, empty list) */}
